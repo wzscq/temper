@@ -19,6 +19,10 @@ const (
 	ResultSaveDataError = 10100010
 	ResultQueryRequestError = 10100007
 	ResultNoHisData = 10100008
+	ResultSaveHisrecToCSVError = 10100009
+	ResultHisRecNotEnough = 10100011
+	ResultPredictError = 10100012
+	ResultReadResultRecsFromCSVError = 10100013
 )
 
 var errMsg = map[int]CommonRsp{
@@ -45,6 +49,26 @@ var errMsg = map[int]CommonRsp{
 	ResultNoHisData:CommonRsp{
 		ErrorCode:ResultNoHisData,
 		Message:"查询温度历史数据时未找到对应数据，请检查参数是否正确",
+		Error:true,
+	},
+	ResultSaveHisrecToCSVError:CommonRsp{
+		ErrorCode:ResultSaveHisrecToCSVError,
+		Message:"保存温度历史数据到CSV文件时发生错误，请与管理员联系处理",
+		Error:true,
+	},
+	ResultHisRecNotEnough:CommonRsp{
+		ErrorCode:ResultHisRecNotEnough,
+		Message:"温度历史数据不足，无法执行预测",
+		Error:true,
+	},
+	ResultPredictError:CommonRsp{
+		ErrorCode:ResultPredictError,
+		Message:"预测温度时发生错误，请与管理员联系处理",
+		Error:true,
+	},
+	ResultReadResultRecsFromCSVError:CommonRsp{
+		ErrorCode:ResultReadResultRecsFromCSVError,
+		Message:"读取预测结果数据时发生错误，请与管理员联系处理",
 		Error:true,
 	},
 }

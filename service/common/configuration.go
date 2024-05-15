@@ -6,6 +6,10 @@ import (
 	"encoding/json"
 )
 
+type predictConf struct {
+	HisCount int `json:"hisCount"`
+}
+
 type serviceConf struct {
 	Port string `json:"port"`
 }
@@ -18,6 +22,7 @@ type crvConf struct {
 type Config struct {
 	Service serviceConf `json:"service"`
 	CRV crvConf `json:"crv"`
+	Predict predictConf `json:"predict"`
 }
 
 var gConfig Config

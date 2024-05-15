@@ -1,9 +1,12 @@
 {
     "service":{
-        "port":"localhost:8303"
+        "port":"localhost:8300"
     },
     "crv":{
         "server":"http://127.0.0.1:8200",
         "token":"predict_service"
+    },
+    "predict":{
+        "hisCount":100
     }
 }

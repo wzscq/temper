@@ -1,0 +1,1 @@
+docker run -d --name temperpredictservice -p8004:80 -v /root/crvframe/appfile:/services/temperpredictservice/appfile -v /root/temperpredictservice/conf:/services/temperpredictservice/conf  wangzhsh/temperpredictservice:0.0.1
