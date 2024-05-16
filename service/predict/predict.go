@@ -8,7 +8,7 @@ import (
 func Predict(hisFileName,resultFileName string)(string) {
 	cmd := exec.Command("python3", "predict.py",hisFileName,resultFileName)
   	// 设置执行命令时的工作目录
-  	out, err := cmd.Output()
+  	_, err := cmd.Output()
 	if err != nil {
 		log.Println("Predict exec predict.py error:",err)
 		return ""

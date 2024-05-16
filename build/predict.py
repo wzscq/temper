@@ -32,9 +32,6 @@ def train_model(dataset):
     # test_size = len(dataset)-train_size
     train, test = dataset[0: train_size], dataset[train_size: len(dataset)]
     #print('Shape of array train:', train.shape)
-    #print('train:', train)
-    #print('Shape of array test:', test.shape)
-    #print('test:', test)
 
     look_back = 1 #步长1 
     trainX, trainY = create_dataset(train, look_back)  #训练集
