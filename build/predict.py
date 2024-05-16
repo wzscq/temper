@@ -108,7 +108,8 @@ with open(resultfile, 'w') as f:
     for i in range(len(predictResultList)):
         #取last_day的下一天
         last_day=getNexDateStr(last_day)
-        f.write(str(device_type_id) + ',' + str(device_id) + ',' + str(sensor_id) + ','+ str(last_day)+',' + str(time) + ',' + str(predictResultList[i]) + '\n')
+        timestr = format(time, '02d')
+        f.write(str(device_type_id) + ',' + str(device_id) + ',' + str(sensor_id) + ','+ str(last_day)+',' + timestr + ',' + str(predictResultList[i]) + '\n')
     f.close()
 
 print('0')
