@@ -1,17 +1,14 @@
-FROM alpine:3.15
-RUN set -eux &&sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-RUN apk add nginx &&\ 
-    apk add ffmpeg && \
-    apk update && \
-    apk add --no-cache musl-dev gcc python3 python3-dev py3-pip && \
-    python3 -m venv /venv && \
-    . /venv/bin/activate  && \
-    pip3 install keras numpy sklearn pandas  && \
-    deactivate
+FROM centos:7
+RUN yum install -y zlib-devel bzip2-devel openssl-devel ncurses-devel readline-devel tk-devel gcc make libffi-devel wget epel-release nginx && \
+    wget https://www.python.org/ftp/python/3.9.17/Python-3.9.17.tgz && \
+    tar -zxvf Python-3.9.17.tgz && \
+    cd Python-3.9.17 && ./configure && make && make install
+RUN pip3 uninstall -y urllib3 && \
+    pip3 install urllib3==1.23 keras tensorflow  scikit-learn pandas
 
 COPY nginx.conf /etc/nginx/nginx.conf
 #ADD ./package/web /web
-ADD ./package/service/audioscoring /services/audioscoringservice/audioscoring
-ADD audioscore.py /services/audioscoringservice/audioscore.py
-copy entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["sh","entrypoint.sh"]
+ADD ./package/service/temper /root/services/temperpredictservice/temper
+ADD predict.py /root/services/temperpredictservice/predict.py
+copy entrypoint.sh /root/entrypoint.sh
+ENTRYPOINT ["sh","/root/entrypoint.sh"]

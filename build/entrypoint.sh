@@ -1,4 +1,3 @@
 nginx
-. /venv/bin/activate
-cd /services/temperpredictservice
+cd /root/services/temperpredictservice
 ./temper
