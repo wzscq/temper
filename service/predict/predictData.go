@@ -347,10 +347,6 @@ func SavePredictToDB(hisRecItems *[]*TemperRecItem,crvClient *crv.CRVClient,toke
 		return errorCode
 	}
 
-	for _,tempRecItem:=range *existRec {
-		log.Println(*tempRecItem)
-	}
-
 	//创建数据保存列表
 	var saveList []map[string]interface{}
 	for _,hisRecItem:=range *hisRecItems {
