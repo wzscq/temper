@@ -13,8 +13,8 @@ func Predict(hisFileName,resultFileName string)(string) {
 		log.Println("Predict exec predict.py error:",err)
 		return ""
 	}
-	log.Println(string(out))
-  	return string(out)
+	//log.Println(string(out))
+  	return "0"
 }
 
 func GetHisFileName(lastHisRecID string)(string){
