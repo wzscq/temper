@@ -70,7 +70,8 @@ func SaveHisRecsToCSV(outFileName string,hisRecItems *[]*TemperRecItem)(error){
 	writer:=csv.NewWriter(file)
 	defer writer.Flush()
 
-	for _,hisRecItem:=range *hisRecItems {
+	for i:=len(*hisRecItems)-1;i>=0;i-- {
+		hisRecItem:=(*hisRecItems)[i]
 		err:=writer.Write([]string{
 			hisRecItem.DeviceTypeID,
 			hisRecItem.DeviceID,
@@ -117,7 +118,7 @@ func GetHisRecs(lastHisRecItem *TemperRecItem,histCount int,crvClient *crv.CRVCl
 		Sorter:&[]crv.Sorter{
 			crv.Sorter{
 				Field:"date",
-				Order:"asc",
+				Order:"desc",
 			},
 		},
 	}
@@ -346,14 +347,20 @@ func SavePredictToDB(hisRecItems *[]*TemperRecItem,crvClient *crv.CRVClient,toke
 		return errorCode
 	}
 
+	for _,tempRecItem:=range *existRec {
+		log.Println(*tempRecItem)
+	}
+
 	//创建数据保存列表
 	var saveList []map[string]interface{}
 	for _,hisRecItem:=range *hisRecItems {
 		var extItem *TemperRecItem
-		for _,existItem:=range *existRec {
-			if hisRecItem.Date==existItem.Date {
-				extItem=existItem
-				break
+		if existRec!=nil {
+			for _,existItem:=range *existRec {
+				if hisRecItem.Date==existItem.Date {
+					extItem=existItem
+					break
+				}
 			}
 		}
 
