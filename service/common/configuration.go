@@ -10,6 +10,11 @@ type predictConf struct {
 	HisCount int `json:"hisCount"`
 }
 
+type dataCleanConf struct {
+	HisCount int `json:"hisCount"`
+	FollowingCount int `json:"followingCount"`
+}
+
 type serviceConf struct {
 	Port string `json:"port"`
 }
@@ -23,6 +28,7 @@ type Config struct {
 	Service serviceConf `json:"service"`
 	CRV crvConf `json:"crv"`
 	Predict predictConf `json:"predict"`
+	DataClean dataCleanConf `json:"dataClean"`
 }
 
 var gConfig Config

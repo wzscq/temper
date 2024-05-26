@@ -35,7 +35,9 @@ func main() {
 	
 	predictController:=predict.PredictController{
 		CRVClient:crvClient,
-		HisCount:conf.Predict.HisCount,
+		PredictHisCount:conf.Predict.HisCount,
+		DataCleanHisCount:conf.DataClean.HisCount,
+		DataCleanFollowingCount:conf.DataClean.FollowingCount,
 	}
 	
 	predictController.Bind(router)

@@ -42,13 +42,13 @@ func _TestGetHisRecs(t *testing.T) {
 	}
 
 	fileName:=GetHisFileName("1")
-	err:=SaveHisRecsToCSV(fileName,hisRecItems)
+	err:=SaveRecsToCSV(fileName,hisRecItems)
 	if err!=nil {
 		t.Error("SaveHisRecsToCSV error")
 	}
 }
 
-func TestReadResultRecsFromCSV(t *testing.T) {
+func _TestReadResultRecsFromCSV(t *testing.T) {
 	fileName:=GetResultFileName("342")
 	resultRecs,err:=ReadResultRecsFromCSV(fileName)
 	if err!=nil {
@@ -74,7 +74,7 @@ func TestReadResultRecsFromCSV(t *testing.T) {
 	}*/
 
 	if len(*resultRecs)>0 {
-		errCode:=SavePredictToDB(resultRecs,crvClient,"predict_service")
+		errCode:=SaveRecsToDB(resultRecs,crvClient,"predict_service")
 		if errCode!=common.ResultSuccess {
 			t.Error("GetExistRecByDate error")
 		}

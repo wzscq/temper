@@ -23,6 +23,8 @@ const (
 	ResultHisRecNotEnough = 10100011
 	ResultPredictError = 10100012
 	ResultReadResultRecsFromCSVError = 10100013
+	ResultFollowingRecNotEnough = 10100014
+	ResultRecNotTheSameSensor = 10100015
 )
 
 var errMsg = map[int]CommonRsp{
@@ -69,6 +71,16 @@ var errMsg = map[int]CommonRsp{
 	ResultReadResultRecsFromCSVError:CommonRsp{
 		ErrorCode:ResultReadResultRecsFromCSVError,
 		Message:"读取预测结果数据时发生错误，请与管理员联系处理",
+		Error:true,
+	},
+	ResultFollowingRecNotEnough:CommonRsp{
+		ErrorCode:ResultFollowingRecNotEnough,
+		Message:"温度数据不足，无法实现正常的数据清洗",
+		Error:true,
+	},
+	ResultRecNotTheSameSensor:CommonRsp{
+		ErrorCode:ResultRecNotTheSameSensor,
+		Message:"所选择的数据不是来自同一个测温点，不能进行数据清洗",
 		Error:true,
 	},
 }

@@ -8,5 +8,9 @@
     },
     "predict":{
         "hisCount":100
+    },
+    "dataClean":{
+        "hisCount":20,
+        "followingCount":1
     }
 }
