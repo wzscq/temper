@@ -74,7 +74,7 @@ func (pc *PredictController) DataClean(c *gin.Context) {
 	cleanFileName:=GetCleanFileName(lastRecID)
 
 	//保存数据到CSV文件
-	err:=SaveRecsToCSV(cleanFileName,cleanItems)
+	err:=SaveCleanRecsToCSV(cleanFileName,cleanItems)
 	if err!=nil {
 		log.Println("end PredictController DataClean with error:SaveHisRecsToCSV error")
 		rsp:=common.CreateResponse(common.CreateError(common.ResultSaveHisrecToCSVError,nil),nil)
@@ -82,7 +82,7 @@ func (pc *PredictController) DataClean(c *gin.Context) {
 		return
 	}
 
-	//调用预测服务
+	//调用清洗服务
 	resultFileName:=GetCleanResultFileName(lastRecID)
 	result:=DataClean(cleanFileName,resultFileName)
 	if result!="0" {
@@ -96,16 +96,16 @@ func (pc *PredictController) DataClean(c *gin.Context) {
 	}
 
 	//读取结果数据
-	resultRecs,err:=ReadResultRecsFromCSV(resultFileName)
+	resultRecs,err:=ReadCleanResultRecsFromCSV(resultFileName)
 	if err!=nil {
-		log.Println("end PredictController DataClean with error:ReadResultRecsFromCSV error")
+		log.Println("end PredictController DataClean with error:ReadCleanResultRecsFromCSV error")
 		rsp:=common.CreateResponse(common.CreateError(common.ResultReadResultRecsFromCSVError,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		return
 	}
 
 	//保存结果数据到数据库
-	errorCode=SaveRecsToDB(resultRecs,pc.CRVClient,header.Token)
+	errorCode=SaveCleanRecsToDB(resultRecs,pc.CRVClient,header.Token)
 	if errorCode!=common.ResultSuccess {
 		log.Println("end PredictController DataClean with error:SavePredictToDB error")
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
@@ -209,14 +209,13 @@ func (pc *PredictController) Predict(c *gin.Context) {
 		}
 
 		//保存结果数据到数据库
-		errorCode=SaveRecsToDB(resultRecs,pc.CRVClient,header.Token)
+		errorCode=SavePrecictRecsToDB(resultRecs,pc.CRVClient,header.Token)
 		if errorCode!=common.ResultSuccess {
 			log.Println("end PredictController Predict with error:SavePredictToDB error")
 			rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 			c.IndentedJSON(http.StatusOK, rsp)
 			return
 		}
-
 	}
 
 	rsp:=common.CreateResponse(nil,nil)

@@ -74,7 +74,7 @@ func _TestReadResultRecsFromCSV(t *testing.T) {
 	}*/
 
 	if len(*resultRecs)>0 {
-		errCode:=SaveRecsToDB(resultRecs,crvClient,"predict_service")
+		errCode:=SavePrecictRecsToDB(resultRecs,crvClient,"predict_service")
 		if errCode!=common.ResultSuccess {
 			t.Error("GetExistRecByDate error")
 		}

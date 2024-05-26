@@ -46,7 +46,7 @@ resultfile=sys.argv[2]
 
 #读取输入数据
 df = pd.read_csv(datafile, delimiter=",", header=None)  # 如果你的数据是以tab分隔的
-data = df.iloc[:, 5].values.tolist()
+data = df.iloc[:, 7].values.tolist()
 print("input data:",data)
 
 #数据清洗
@@ -54,7 +54,7 @@ data=data_clean(data)
 
 #数据写回原始读入的list中
 for i in range(len(data)):
-    df.iloc[i,5]=data[i]
+    df.iloc[i,7]=data[i]
 
 #将清洗后的df数据写入文件
 df.to_csv(resultfile, header=False, index=False)

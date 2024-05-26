@@ -5,6 +5,8 @@ import (
 	"temper/common"
 	"log"
 	"os/exec"
+	"os"
+	"encoding/csv"
 )
 
 func GetCleanResultFileName(recID string)(string){
@@ -21,6 +23,9 @@ func GetCleanItems(selectedRowKeys *[]string,crvClient *crv.CRVClient,token stri
 		Fields:&[]map[string]interface{}{
 			map[string]interface{}{
 				"field":"id",
+			},
+			map[string]interface{}{
+				"field":"version",
 			},
 			map[string]interface{}{
 				"field":"date",
@@ -52,7 +57,11 @@ func GetCleanItems(selectedRowKeys *[]string,crvClient *crv.CRVClient,token stri
 		},
 		Sorter:&[]crv.Sorter{
 			crv.Sorter{
-				Field:"id",
+				Field:"date",
+				Order:"asc",
+			},
+			crv.Sorter{
+				Field:"time",
 				Order:"asc",
 			},
 		},
@@ -93,6 +102,7 @@ func GetCleanItems(selectedRowKeys *[]string,crvClient *crv.CRVClient,token stri
 
 		cleanItem:=TemperRecItem{
 			ID:itemMap["id"].(string),
+			Version:itemMap["version"].(string),
 			Time:itemMap["time"].(string),
 			Date:itemMap["date"].(string),
 			DeviceTypeID:itemMap["temper_device_type_id"].(string),
@@ -128,4 +138,93 @@ func IsSameDeviceSensor(recs *[]*TemperRecItem)(bool){
 	}
 
 	return true
+}
+
+func SaveCleanRecsToDB(hisRecItems *[]*TemperRecItem,crvClient *crv.CRVClient,token string)(int){
+	var saveList []map[string]interface{}
+	for _,hisRecItem:=range *hisRecItems {
+
+		saveList=append(saveList,map[string]interface{}{
+			"id":hisRecItem.ID,
+			"version":hisRecItem.Version,
+			"temper_actual":hisRecItem.Predicted,
+			"_save_type":"update",
+		})
+	}
+
+	commonRep:=crv.CommonReq{
+		ModelID:"temper_rec",
+		List:&saveList,
+	}
+
+	_,errorCode:=crvClient.Save(&commonRep,token)
+	return errorCode
+}
+
+func SaveCleanRecsToCSV(outFileName string,hisRecItems *[]*TemperRecItem)(error){
+	file,err:=os.Create(outFileName)
+	if err!=nil {
+		log.Println("SaveCleanRecsToCSV create file error")
+		return err
+	}
+	defer file.Close()
+
+	writer:=csv.NewWriter(file)
+	defer writer.Flush()
+
+	for i:=len(*hisRecItems)-1;i>=0;i-- {
+		hisRecItem:=(*hisRecItems)[i]
+		err:=writer.Write([]string{
+			hisRecItem.ID,
+			hisRecItem.Version,
+			hisRecItem.DeviceTypeID,
+			hisRecItem.DeviceID,
+			hisRecItem.SensorID,
+			hisRecItem.Date,
+			hisRecItem.Time,
+			hisRecItem.Actual,
+		})
+		if err!=nil {
+			log.Println("SaveCleanRecsToCSV write error")
+			return err
+		}
+	}
+
+	return nil
+}
+
+func ReadCleanResultRecsFromCSV(inFileName string)(*[]*TemperRecItem,error){
+	//打开文件
+	file,err:=os.Open(inFileName)
+	if err!=nil {
+		log.Println("ReadCleanResultRecsFromCSV open file error",err.Error())
+		return nil,err
+	}
+	defer file.Close()
+
+	//创建csv reader
+	reader:=csv.NewReader(file)
+	//读取所有记录
+	records,err:=reader.ReadAll()
+	if err!=nil {
+		log.Println("ReadCleanResultRecsFromCSV read all error",err.Error())
+		return nil,err
+	}
+	//解析记录
+	var resultRecItems []*TemperRecItem
+	for _,record:=range records {
+		tempRecItem:=&TemperRecItem{
+			ID:record[0],
+			Version:record[1],
+			DeviceTypeID:record[2],
+			DeviceID:record[3],
+			SensorID:record[4],
+			Date:record[5],
+			Time:record[6],
+			Predicted:record[7],
+		}
+		resultRecItems=append(resultRecItems,tempRecItem)
+	}
+
+	return &resultRecItems,nil
 }
